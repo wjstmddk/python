@@ -224,21 +224,22 @@ def insert_matches_timelines_mysql(row, conn):
     )
     sql_execute(conn, query)
     return query
-tier=['IRON','BRONZE','SILVER','GOLD','PLATINUM','EMERAID','DIAMOND','MASTER','GRANDMASTER']
-for i in range(1000):
-    for t in tier:
-        try:
-            raw_data=get_rawdata(t)
-            df=get_match_timeline_df(raw_data)
-            conn=connect_mysql()
-            df.progress_apply(lambda x:insert_matches_timelines_mysql(x,conn),axis=1)
-            conn.commit()
-            conn.close()
-            print(f'semi의 {i}번째 완료')
-            time.sleep(90)
-        except Exception as e:
-            print(f'{e}의 원인으로 insert 실패')
-            time.sleep(90)
+if __name__=='__main__':
+    tier=['IRON','BRONZE','SILVER','GOLD','PLATINUM','EMERAID','DIAMOND','MASTER','GRANDMASTER']
+    for i in range(1000):
+        for t in tier:
+            try:
+                raw_data=get_rawdata(t)
+                df=get_match_timeline_df(raw_data)
+                conn=connect_mysql()
+                df.progress_apply(lambda x:insert_matches_timelines_mysql(x,conn),axis=1)
+                conn.commit()
+                conn.close()
+                print(f'semi의 {i}번째 완료')
+                time.sleep(90)
+            except Exception as e:
+                print(f'{e}의 원인으로 insert 실패')
+                time.sleep(90)
 
 
 print('import complet')
